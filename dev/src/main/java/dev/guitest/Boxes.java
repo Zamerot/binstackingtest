@@ -2,11 +2,13 @@ package dev.guitest;
 
 import dev.business.Item;
 import dev.business.StripBin;
+import dev.example.Xform;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
@@ -19,6 +21,9 @@ public class Boxes extends Group {
 
     private Camera camera;
 
+    private final Xform world = new Xform();
+
+
     public Boxes(List<StripBin> boxes, double width, double length)
     {
         Box mainBox = new Box(width, 10, length);
@@ -28,8 +33,12 @@ public class Boxes extends Group {
 //        boxesGroup.getChildren().add(mainBox);
 
 
+        Sphere origin = new Sphere(50);
+        origin.setMaterial(new PhongMaterial(Color.RED));
 
 
+
+        buildAxis();
 
 
         Color currentColor = Color.RED;
@@ -67,6 +76,7 @@ public class Boxes extends Group {
 
             transLength = 0;
         }
+
 //
 
 //        camera.getTransforms().addAll (
@@ -75,11 +85,11 @@ public class Boxes extends Group {
 //                new Translate(-width/2,0, -50));
 
 
-        camera = new PerspectiveCamera(false);
+        camera = new PerspectiveCamera(true);
 
-        camera.setTranslateY(-500);
-        camera.setTranslateX(-150);
-        camera.setTranslateZ(300);
+//        camera.setTranslateY(-500);
+//        camera.setTranslateX(-150);
+//        camera.setTranslateZ(300);
 
 //        camera = new PerspectiveCamera(true);
 //        camera.setFieldOfView(62);
@@ -100,15 +110,49 @@ public class Boxes extends Group {
 //                rotateZ = new Rotate(0, Rotate.Z_AXIS),
 //                translate = new Translate(50, 0, 90));
 
+        boxesGroup.getChildren().add(origin);
+
         Group root = new Group();
         root.getChildren().add(camera);
-        root.getChildren().add(boxesGroup);
+        root.getChildren().add(world);
+
 
         SubScene subScene;
         subScene = new SubScene(root, 600, 600, true, SceneAntialiasing.DISABLED);
         subScene.setCamera(camera);
 
         this.getChildren().add(subScene);
+    }
+
+
+    private void buildAxis()
+    {
+        System.out.println("buildAxes()");
+        final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.DARKRED);
+        redMaterial.setSpecularColor(Color.RED);
+
+        final PhongMaterial greenMaterial = new PhongMaterial();
+        greenMaterial.setDiffuseColor(Color.DARKGREEN);
+        greenMaterial.setSpecularColor(Color.GREEN);
+
+        final PhongMaterial blueMaterial = new PhongMaterial();
+        blueMaterial.setDiffuseColor(Color.DARKBLUE);
+        blueMaterial.setSpecularColor(Color.BLUE);
+
+        final Box xAxis = new Box(500, 1, 1);
+        final Box yAxis = new Box(1, 500, 1);
+        final Box zAxis = new Box(1, 1, 500);
+
+        xAxis.setMaterial(redMaterial);
+        yAxis.setMaterial(greenMaterial);
+        zAxis.setMaterial(blueMaterial);
+
+        Group axisGroup = new Group();
+
+        axisGroup.getChildren().addAll(xAxis, yAxis, zAxis);
+        axisGroup.setVisible(false);
+        world.getChildren().addAll(axisGroup);
     }
 
 

@@ -31,8 +31,9 @@ public class MainWindow extends Application {
         GAProcessor processor = new GAProcessor();
         List<StripBin> best = processor.finBest(GAProcessor.sampleData(200), 200, 100);
 
-        mainBox.getChildren().add(new Boxes(best, 200, 100));
+//        mainBox.getChildren().add(new Boxes(best, 200, 100));
 
+        mainBox.getChildren().add(new Boxes2(best));
         return mainBox;
     }
 
